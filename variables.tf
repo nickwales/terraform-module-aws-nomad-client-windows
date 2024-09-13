@@ -85,4 +85,4 @@ variable "target_groups" {
   default = []
 }
 
-variable "key_name" {}
+#variable "key_name" {}

@@ -66,5 +66,5 @@ resource "aws_launch_template" "nomad_client" {
     # iis_cert_file         = data.local_file.iis_pfx.content
   }))
 
-  key_name = var.key_name
+  #key_name = var.key_name
 }
