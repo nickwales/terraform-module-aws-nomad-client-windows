@@ -22,7 +22,7 @@ Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/
 # Configure firewall rules
 netsh advfirewall set publicprofile state off
 
-# Install chocolatey
+# Install chocolatey and nano
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
 iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -57,7 +57,9 @@ New-Item -type directory $NOMAD_BIN_PATH
 New-Item -type directory $NOMAD_PLUGIN_PATH
 
 # Write Consul Agent Cert
-Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file
+#Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file
+
+$consul_ca_file | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem
 
 # Download Consul
 Invoke-WebRequest -Uri "https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_windows_amd64.zip" -OutFile "C:\consul.zip"
