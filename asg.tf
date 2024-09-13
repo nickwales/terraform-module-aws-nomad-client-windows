@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "nomad_client" {
-  name                      = "nomad-client-windows-${name}-${var.datacenter}"
+  name                      = "nomad-client-windows-${var.name}-${var.datacenter}"
   max_size                  = 3
   min_size                  = 1
   health_check_grace_period = 300
@@ -13,7 +13,7 @@ resource "aws_autoscaling_group" "nomad_client" {
 
   tag {
     key                 = "Name"
-    value               = "nomad-client-windows-${name}-${var.datacenter}"
+    value               = "nomad-client-windows-${var.name}-${var.datacenter}"
     propagate_at_launch = true
   }
 }
@@ -25,7 +25,7 @@ resource "aws_launch_template" "nomad_client" {
   iam_instance_profile {
     name = aws_iam_instance_profile.nomad_client.name
   }
-  name = "nomad-client-windows-${name}-${var.datacenter}"
+  name = "nomad-client-windows-${var.name}-${var.datacenter}"
 
   network_interfaces {
     associate_public_ip_address = false
@@ -35,8 +35,8 @@ resource "aws_launch_template" "nomad_client" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "nomad-client-windows-${name}-${var.datacenter}",
-      role = "nomad-client-windows-${name}-${var.datacenter}",
+      Name = "nomad-client-windows-${var.name}-${var.datacenter}",
+      role = "nomad-client-windows-${var.name}-${var.datacenter}",
     }
   }  
   update_default_version = true
