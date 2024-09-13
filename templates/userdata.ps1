@@ -57,27 +57,7 @@ New-Item -type directory $NOMAD_BIN_PATH
 New-Item -type directory $NOMAD_PLUGIN_PATH
 
 # Write Consul Agent Cert
-$consul_ca_file_test = @"
------BEGIN CERTIFICATE-----
-MIIC7jCCApSgAwIBAgIRAIn0Wic0Wl9GyYlyj/BDMUEwCgYIKoZIzj0EAwIwgbkx
-CzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNj
-bzEaMBgGA1UECRMRMTAxIFNlY29uZCBTdHJlZXQxDjAMBgNVBBETBTk0MTA1MRcw
-FQYDVQQKEw5IYXNoaUNvcnAgSW5jLjFAMD4GA1UEAxM3Q29uc3VsIEFnZW50IENB
-IDE4MzM3Mjk4NDM3ODk4MTExMzAwMDkxNTgxMjE3NDkxMjUwMDAzMzAeFw0yNDA2
-MDYyMzA1NTdaFw0yOTA2MDUyMzA1NTdaMIG5MQswCQYDVQQGEwJVUzELMAkGA1UE
-CBMCQ0ExFjAUBgNVBAcTDVNhbiBGcmFuY2lzY28xGjAYBgNVBAkTETEwMSBTZWNv
-bmQgU3RyZWV0MQ4wDAYDVQQREwU5NDEwNTEXMBUGA1UEChMOSGFzaGlDb3JwIElu
-Yy4xQDA+BgNVBAMTN0NvbnN1bCBBZ2VudCBDQSAxODMzNzI5ODQzNzg5ODExMTMw
-MDA5MTU4MTIxNzQ5MTI1MDAwMzMwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQl
-XuDwwbEGMcMlU+s9O+vF+s+MAkTa1ge8NM4WKY19YVbWOBhYxFNLFEogZ9vZnrTE
-S28nHKgUEV+rZHLvuTolo3sweTAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUw
-AwEB/zApBgNVHQ4EIgQg09MWd8E8wBJLIZuxJ7hMv3gehKEA2oaWev6iCmT8gkUw
-KwYDVR0jBCQwIoAg09MWd8E8wBJLIZuxJ7hMv3gehKEA2oaWev6iCmT8gkUwCgYI
-KoZIzj0EAwIDSAAwRQIgRJiD8POwApcWOYb0YskI/HzcLoNIOH+hEotWP9xALOcC
-IQCjaZoZfQDNL+oRRLs3AgJOmNZS6DNCnKhnd58Oja8Xmw==
------END CERTIFICATE-----
-"@
-Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file_test
+Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file
 
 # Download Consul
 Invoke-WebRequest -Uri "https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_windows_amd64.zip" -OutFile "C:\consul.zip"
@@ -91,8 +71,6 @@ Expand-Archive C:\nomad.zip -DestinationPath $NOMAD_BIN_PATH
 Remove-Item C:\nomad.zip
 
 # Download Nomad IIS Plugin
-# Invoke-WebRequest -Uri "https://github.com/Roblox/nomad-driver-iis/releases/download/v0.1.0/win_iis.exe" -OutFile "C:\nomad\plugin\win_iis.exe"
-
 Invoke-WebRequest -Uri "https://github.com/sevensolutions/nomad-iis/releases/download/v0.9.0/nomad_iis.zip" -OutFile "C:\nomad_iis.zip"
 Expand-Archive C:\nomad_iis.zip -DestinationPath $NOMAD_PLUGIN_PATH
 Remove-Item C:\nomad_iis.zip
@@ -117,6 +95,7 @@ $consul_config = @"
 datacenter = "${datacenter}"
 data_dir = "C:\\consul\\data"
 log_level = "INFO"
+log_file = "$${CONSUL_LOG_PATH}"
 server = false
 advertise_addr = "$${HostIP}"
 bind_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"address\" }}"
