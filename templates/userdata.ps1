@@ -59,7 +59,9 @@ New-Item -type directory $NOMAD_PLUGIN_PATH
 # Write Consul Agent Cert
 #Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file
 
-$consul_ca_file | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem
+$consul_ca_file | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem -Encoding Ascii
+
+#$cert | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem -Encoding Ascii
 
 # Download Consul
 Invoke-WebRequest -Uri "https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_windows_amd64.zip" -OutFile "C:\consul.zip"
@@ -73,7 +75,7 @@ Expand-Archive C:\nomad.zip -DestinationPath $NOMAD_BIN_PATH
 Remove-Item C:\nomad.zip
 
 # Download Nomad IIS Plugin
-Invoke-WebRequest -Uri "https://github.com/sevensolutions/nomad-iis/releases/download/v0.9.0/nomad_iis.zip" -OutFile "C:\nomad_iis.zip"
+Invoke-WebRequest -Uri "https://github.com/sevensolutions/nomad-iis/releases/download/${iis_driver_version}/nomad_iis.zip" -OutFile "C:\nomad_iis.zip"
 Expand-Archive C:\nomad_iis.zip -DestinationPath $NOMAD_PLUGIN_PATH
 Remove-Item C:\nomad_iis.zip
 
@@ -144,6 +146,10 @@ retry_join = ["provider=aws tag_key=role tag_value=consul-server-${name}-${datac
 
 $nomad_config = @"
 data_dir = "C:\\nomad\\data"
+log_file = "$${NOMAD_LOG_PATH}"
+
+region = "${nomad_region}"
+datacenter = "${nomad_datacenter}"
 
 # Enable the server
 client {

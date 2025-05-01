@@ -13,6 +13,14 @@ variable "private_subnets" {
   default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 }
 
+variable "nomad_region" {
+  default = "dc1"
+}
+
+variable "nomad_datacenter" {
+  default = "dc1"
+}
+
 variable "nomad_token" {
   default = "root"
 }
@@ -48,7 +56,7 @@ variable "consul_agent_token" {
 variable "consul_encryption_key" {
   default = "P4+PEZg4jDcWkSgHZ/i3xMuHaMmU8rx2owA4ffl2K8w="
 }
-variable "datacenter" {
+variable "consul_datacenter" {
   default = "dc1"
 }
 
@@ -85,4 +93,6 @@ variable "target_groups" {
   default = []
 }
 
-#variable "key_name" {}
+variable "iis_driver_version" {
+  default = "v0.14.0"
+}
