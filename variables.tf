@@ -13,6 +13,7 @@ variable "private_subnets" {
   default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 }
 
+### Nomad Configuration
 variable "nomad_region" {
   default = "dc1"
 }
@@ -26,7 +27,7 @@ variable "nomad_token" {
 }
 
 variable "nomad_version" {
-  default = "1.8.0"
+  default = "1.10.0"
 }
 variable "nomad_binary" {
   description = "Allows upgrading to nomad Enterprise"
@@ -37,6 +38,11 @@ variable "consul_binary" {
   default = "consul"
 }
 
+variable "iis_driver_version" {
+  default = "v0.14.0"
+}
+
+### Consul Configuration
 variable "consul_version" {
   default = "1.18.2"
 }
@@ -93,6 +99,3 @@ variable "target_groups" {
   default = []
 }
 
-variable "iis_driver_version" {
-  default = "v0.14.0"
-}
