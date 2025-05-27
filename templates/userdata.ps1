@@ -13,7 +13,7 @@ Set-WebConfiguration //System.WebServer/Security/Authentication/anonymousAuthent
 # Install-WindowsFeature -Name Hyper-V -IncludeManagementTools 
 # Install Docker
 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1" -o install-docker-ce.ps1
-.\install-docker-ce.ps1 NoRestart
+.\install-docker-ce.ps1 -NoRestart
 
 # Set the TLS version used by the PowerShell client to TLS 1.2.
 #[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
@@ -26,7 +26,7 @@ netsh advfirewall set publicprofile state off
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
 iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-choco install -y nano
+choco install -y vim
 
 $CONSUL_PATH="C:\consul"
 $CONSUL_BIN_PATH="$CONSUL_PATH\bin"
@@ -57,11 +57,8 @@ New-Item -type directory $NOMAD_BIN_PATH
 New-Item -type directory $NOMAD_PLUGIN_PATH
 
 # Write Consul Agent Cert
-#Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value $consul_ca_file
+Set-Content -Path "$CONSUL_CERTS_PATH\consul-agent-ca.pem" -Value "${consul_ca_file}"
 
-$consul_ca_file | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem -Encoding Ascii
-
-#$cert | Out-File -FilePath C:\consul\certs\consul-agent-ca.pem -Encoding Ascii
 
 # Download Consul
 Invoke-WebRequest -Uri "https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_windows_amd64.zip" -OutFile "C:\consul.zip"
@@ -99,7 +96,7 @@ $consul_config = @"
 datacenter = "${datacenter}"
 data_dir = "C:\\consul\\data"
 log_level = "INFO"
-log_file = "$${CONSUL_LOG_PATH}"
+log_file = "C:\\consul\\consul.log"
 server = false
 advertise_addr = "$${HostIP}"
 bind_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"address\" }}"
@@ -206,12 +203,7 @@ plugin "raw_exec" {
   }
 }
 
-plugin "win_iis" {
-  config {
-    enabled = true
-    stats_interval = "30s"
-  }
-}
+plugin "nomad_iis" {}
 
 plugin "docker" {
   config {
