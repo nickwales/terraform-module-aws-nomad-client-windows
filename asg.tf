@@ -1,7 +1,7 @@
 resource "aws_autoscaling_group" "nomad_client" {
   name                      = "nomad-client-windows-${var.name}-${var.consul_datacenter}"
   max_size                  = 10
-  min_size                  = 1
+  min_size                  = 0
   health_check_grace_period = 300
   health_check_type         = "EC2"
   desired_capacity          = "${var.nomad_client_count}"
